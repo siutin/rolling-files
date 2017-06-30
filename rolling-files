@@ -15,7 +15,7 @@ do
             DEST_PATH=$2
             ;;
         --auto-yes)
-            AUTO_YES=$2
+            AUTO_YES=${2:-true}
             ;;
         --help|-h|\?)
             IS_HELP=true
@@ -41,7 +41,7 @@ if [ "$IS_HELP" = true ]; then
 fi 
 # ----------- main --------------- >
 
-AUTO_YES=${AUTO_YES:-false}
+! [[ "$AUTO_YES" = true ]] && ! [[ "$AUTO_YES" = false ]] && AUTO_YES=false
 IS_VERBOSE=${IS_VERBOSE:-false}
 
 if [ -z $SOURCE_PATH ]; then
