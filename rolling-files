@@ -1,14 +1,31 @@
 #!/bin/bash
 
-# ./rolling-files $SOURCE_PATH $DEST_PATH AUTH_YES
+# ./rolling-files --source-path a --dest-path b --auto-yes c
 
-# SETTING ---->
+# ----- handle arguments ---- >
 
-SOURCE_PATH=${1:-/var/backups/images}
-DEST_PATH=${2:-/mnt/datacenter/images}
-AUTO_YES=${3:-false}
+while [ $# -ne 0 ]
+do
+    arg="$1"
+    case "$arg" in
+        --source-path)
+            SOURCE_PATH=$2
+            ;;
+        --dest-path)
+            DEST_PATH=$2
+            ;;
+        --auto-yes)
+            AUTO_YES=$2
+            ;;
+       *)
+            ;;
+    esac
+    shift
+done
 
-# <------- SETTING
+# ----------- main --------------- >
+
+AUTO_YES=${AUTO_YES:-false}
 
 if [ -z $SOURCE_PATH ]; then
  echo "source path is required."
