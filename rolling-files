@@ -67,9 +67,11 @@ else
  echo "FILES TO KEEP:"
  echo "$FILES_TO_KEEP" | xargs -n 1 echo -e "\t"
 
- read -rp "Are you sure you want to continue? [Y/n] " key 
+ if ! [ "$AUTO_YES" = true ]; then
+  read -rp "Are you sure you want to continue? [Y/n] " key 
+ fi
 
- if [ "$key" = 'Y' ] || [ "$key" = 'y' ]; then
+ if [ "$key" = 'Y' ] || [ "$key" = 'y' ] || [ "$AUTO_YES" = true ]; then
   echo "Y."
   RAND_NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
   ls -l $SOURCE_PATH | awk '{ print $9 }' > /tmp/source_files_$RAND_NAME
