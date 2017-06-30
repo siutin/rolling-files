@@ -17,12 +17,25 @@ do
         --auto-yes)
             AUTO_YES=$2
             ;;
-       *)
+        --help|-h|\?)
+            IS_HELP=true
+            ;;
+        *)
             ;;
     esac
     shift
 done
 
+# ------ handle help ------------- <
+
+if [ "$IS_HELP" = true ]; then
+ echo "usage:" 
+ printf "\trolling-files --source-path [string] --dest-path [string] --auto-yes [boolean]\n"
+ echo "exmaple:"
+ printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --auto-yes true\n"
+
+ exit 0
+fi 
 # ----------- main --------------- >
 
 AUTO_YES=${AUTO_YES:-false}
