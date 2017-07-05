@@ -14,6 +14,9 @@ do
         --dest-path)
             DEST_PATH="$2"
             ;;
+	--keep-N)
+	    KEEP_N="$2"
+	    ;;
         --auto-yes)
             AUTO_YES=${2:-true}
             ;;
@@ -42,6 +45,9 @@ fi
 # ----------- main --------------- >
 
 ! [[ "$AUTO_YES" = true ]] && ! [[ "$AUTO_YES" = false ]] && AUTO_YES=false
+
+[[ -z `echo "$KEEP_N" | grep -E ^\-?[0-9]+$` ]] && KEEP_N=3
+
 IS_VERBOSE=${IS_VERBOSE:-false}
 
 if [ -z "$SOURCE_PATH" ]; then
@@ -58,6 +64,7 @@ echo "IS VERBOSE? $IS_VERBOSE"
 echo "AUTO YES? $AUTO_YES"
 echo "SOURCE PATH: $SOURCE_PATH"
 echo "DEST PATH: $DEST_PATH"
+echo "KEEP N: $KEEP_N"
 
 [[ "$IS_VERBOSE" = true ]] && echo "***************** start - "`date`" ****************"
 
@@ -66,8 +73,9 @@ FILE_LIST=$(ls -lrth "$SOURCE_PATH" | grep -E "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[
 if [ $(echo "$FILE_LIST" | wc -l) -le 1 ]; then
  echo "not thing to do."
 else
- FILES_TO_MOVE=$(echo "$FILE_LIST" | head -n -1)
- FILES_TO_KEEP=$(echo "$FILE_LIST" | tail -n 1) 
+
+ FILES_TO_MOVE=$(echo "$FILE_LIST" | head -n "-$KEEP_N")
+ FILES_TO_KEEP=$(echo "$FILE_LIST" | tail -n "$KEEP_N")
  
  echo "FILES TO MOVE:" 
  echo "$FILES_TO_MOVE" | xargs -n 1 echo -e "\t"
