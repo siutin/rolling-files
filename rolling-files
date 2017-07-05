@@ -73,7 +73,7 @@ FILE_LIST=$(ls -lrth "$SOURCE_PATH" | grep -E "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[
 NUM_OF_FILES=$(echo "$FILE_LIST" | wc -l)
 
 if [ "$NUM_OF_FILES" -le 1 ]; then
- echo "not thing to do."
+ echo "nothing to do."
 else
  NUM_OF_FILES_TO_MOVE=`expr $NUM_OF_FILES - $KEEP_N`
  echo "NUM OF FILES TO MOVE: $NUM_OF_FILES_TO_MOVE"
