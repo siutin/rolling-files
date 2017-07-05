@@ -9,10 +9,10 @@ do
     arg="$1"
     case "$arg" in
         --source-path)
-            SOURCE_PATH=$2
+            SOURCE_PATH="$2"
             ;;
         --dest-path)
-            DEST_PATH=$2
+            DEST_PATH="$2"
             ;;
         --auto-yes)
             AUTO_YES=${2:-true}
@@ -44,24 +44,24 @@ fi
 ! [[ "$AUTO_YES" = true ]] && ! [[ "$AUTO_YES" = false ]] && AUTO_YES=false
 IS_VERBOSE=${IS_VERBOSE:-false}
 
-if [ -z $SOURCE_PATH ]; then
+if [ -z "$SOURCE_PATH" ]; then
  echo "source path is required."
  exit 1
 fi
 
-if [ -z $DEST_PATH ]; then
+if [ -z "$DEST_PATH" ]; then
  echo "dest path is required."
  exit 1
 fi
 
-echo "IS VERBOSE? ${IS_VERBOSE}"
-echo "AUTO YES? ${AUTO_YES}"
-echo "SOURCE PATH: ${SOURCE_PATH}"
-echo "DEST PATH: ${DEST_PATH}"
+echo "IS VERBOSE? $IS_VERBOSE"
+echo "AUTO YES? $AUTO_YES"
+echo "SOURCE PATH: $SOURCE_PATH"
+echo "DEST PATH: $DEST_PATH"
 
 [[ "$IS_VERBOSE" = true ]] && echo "***************** start - "`date`" ****************"
 
-FILE_LIST=$(ls -lrth  $SOURCE_PATH | grep -E "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz)" | awk {'print $9'} | sed -E 's/\.part-[0-9]+$//' | uniq | sort)
+FILE_LIST=$(ls -lrth "$SOURCE_PATH" | grep -E "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz)" | awk {'print $9'} | sed -E 's/\.part-[0-9]+$//' | uniq | sort)
 
 if [ $(echo "$FILE_LIST" | wc -l) -le 1 ]; then
  echo "not thing to do."
@@ -81,8 +81,8 @@ else
  if [ "$key" = 'Y' ] || [ "$key" = 'y' ] || [ "$AUTO_YES" = true ]; then
   echo "Y."
   RAND_NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
-  ls -l $SOURCE_PATH | awk '{ print $9 }' > /tmp/source_files_$RAND_NAME
-  echo "$FILES_TO_MOVE" | xargs -I {} grep -n {} /tmp/source_files_$RAND_NAME | sed 's/^\([0-9]\{1,\}\:\)//g' | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} $DEST_PATH
+  ls -l "$SOURCE_PATH" | awk '{ print $9 }' > "/tmp/source_files_$RAND_NAME"
+  echo "$FILES_TO_MOVE" | xargs -I {} grep -n {} "/tmp/source_files_$RAND_NAME" | sed 's/^\([0-9]\{1,\}\:\)//g' | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} "$DEST_PATH"
  else
   echo "Abort."
  fi
