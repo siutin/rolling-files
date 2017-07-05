@@ -75,7 +75,7 @@ NUM_OF_FILES=$(echo "$FILE_LIST" | wc -l)
 if [ "$NUM_OF_FILES" -le 1 ]; then
  echo "nothing to do."
 else
- NUM_OF_FILES_TO_MOVE=`expr $NUM_OF_FILES - $KEEP_N`
+ NUM_OF_FILES_TO_MOVE=$([[ $NUM_OF_FILES -gt $KEEP_N ]] && echo `expr $NUM_OF_FILES - $KEEP_N` || echo 0)
  echo "NUM OF FILES TO MOVE: $NUM_OF_FILES_TO_MOVE"
 
  FILES_TO_MOVE=$(echo "$FILE_LIST" | head -n "-$KEEP_N")
