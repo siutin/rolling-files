@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./rolling-files --source-path a --dest-path b --auto-yes c
+# ./rolling-files --source-path a --dest-path b --auto-yes c --keep-N d
 
 # ----- handle arguments ---- >
 
@@ -36,9 +36,9 @@ done
 
 if [ "$IS_HELP" = true ]; then
  echo "usage:" 
- printf "\trolling-files --source-path [string] --dest-path [string] --auto-yes [boolean]\n"
+ printf "\trolling-files --source-path [string] --dest-path [string] --auto-yes [boolean] --keep-N [integer]\n"
  echo "exmaple:"
- printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --auto-yes true\n"
+ printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --auto-yes true --keep-N 3\n"
 
  exit 0
 fi 
