@@ -68,7 +68,7 @@ echo "KEEP N: $KEEP_N"
 
 [[ "$IS_VERBOSE" = true ]] && echo "***************** start - "`date`" ****************"
 
-FILE_LIST=$(ls -lrth "$SOURCE_PATH" | grep -E "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz)" | awk {'print $9'} | sed -E 's/\.part-[0-9]+$//' | uniq | sort)
+FILE_LIST=$(ls -lrth "$SOURCE_PATH" | grep -E "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz|([a-zA-Z0-9_]+)?.sql)" | awk {'print $9'} | sed -E 's/\.part-[0-9]+$//' | uniq | sort)
 
 NUM_OF_FILES=$(echo "$FILE_LIST" | wc -l)
 
