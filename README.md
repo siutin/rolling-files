@@ -68,7 +68,7 @@ Optional Arguments:
 
  --keep-N <argument>
  
-  Set number of files that need to be retained. Default 3.
+  Keep the N most recent files. Default 3.
  
  --file-pattern <PATTERN>
   
