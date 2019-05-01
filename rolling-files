@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./rolling-files --source-path a --dest-path b --auto-yes c --keep-N d --file-pattern e
+# ./rolling-files --source-path a --dest-path b --auto-yes c --keep-N d --file-pattern e --dry-run d
 
 # ----- handle arguments ---- >
 
@@ -23,6 +23,9 @@ do
         --auto-yes)
             AUTO_YES=${2:-true}
             ;;
+        --dry-run)
+            DRY_RUN=${2:-true}
+            ;;
         --help|-h|\?)
             IS_HELP=true
             ;;
@@ -39,9 +42,9 @@ done
 
 if [ "$IS_HELP" = true ]; then
  echo "usage:" 
- printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes [boolean] --keep-N [integer]\n"
+ printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes [boolean] --keep-N [integer] --dry-run [boolean]\n"
  echo "exmaple:"
- printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes true --keep-N 3\n"
+ printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes true --keep-N 3 --dry-run\n"
 
  exit 0
 fi 
@@ -66,6 +69,7 @@ fi
 
 echo "IS VERBOSE? $IS_VERBOSE"
 echo "AUTO YES? $AUTO_YES"
+echo "DRY RUN? $DRY_RUN"
 echo "SOURCE PATH: $SOURCE_PATH"
 echo "DEST PATH: $DEST_PATH"
 echo "PATTERN: $PATTERN"
@@ -103,6 +107,9 @@ else
 
   # build rsync arguments
   RSYNC_ARGS=(-avh --progress --remove-source-files )
+  if [ "$DRY_RUN" = true ]; then
+    RSYNC_ARGS+=( --dry-run )
+  fi
 
   # build rsync source files, convert newline to space
   FILES_TO_MOVE=$(ls -l "$SOURCE_PATH" | awk '{ print $9 }' | grep "$FILES_TO_MOVE" | xargs -n 1 -i echo "$SOURCE_PATH/{}")
