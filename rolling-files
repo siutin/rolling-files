@@ -92,9 +92,10 @@ else
 
  if [ "$key" = 'Y' ] || [ "$key" = 'y' ] || [ "$AUTO_YES" = true ]; then
   echo "Y."
-  RAND_NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
-  ls -l "$SOURCE_PATH" | awk '{ print $9 }' > "/tmp/source_files_$RAND_NAME"
-  echo "$FILES_TO_MOVE" | xargs -i grep {} "/tmp/source_files_$RAND_NAME" | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} "$DEST_PATH"
+  # FILES_TO_MOVE MUST NOT BE EMPTY !!!!
+  [ -z "$FILES_TO_MOVE" ] && \ 
+    echo "ERROR: FILES_TO_MOVE is empty" || \
+    (ls -l "$SOURCE_PATH" | awk '{ print $9 }' | grep "$FILES_TO_MOVE" | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} "$DEST_PATH")
  else
   echo "Abort."
  fi
