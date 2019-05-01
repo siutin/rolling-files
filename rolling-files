@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./rolling-files --source-path a --dest-path b --auto-yes c --keep-N d
+# ./rolling-files --source-path a --dest-path b --auto-yes c --keep-N d --file-pattern e
 
 # ----- handle arguments ---- >
 
@@ -14,17 +14,20 @@ do
         --dest-path)
             DEST_PATH="$2"
             ;;
-	--keep-N)
-	    KEEP_N="$2"
-	    ;;
+        --keep-N)
+            KEEP_N="$2"
+            ;;
+        --file-pattern)
+            PATTERN="$2"
+            ;;
         --auto-yes)
             AUTO_YES=${2:-true}
             ;;
         --help|-h|\?)
             IS_HELP=true
-	    ;;
-	--verbose)
-	    IS_VERBOSE=true
+            ;;
+        --verbose)
+            IS_VERBOSE=true
             ;;
         *)
             ;;
@@ -36,9 +39,9 @@ done
 
 if [ "$IS_HELP" = true ]; then
  echo "usage:" 
- printf "\trolling-files --source-path [string] --dest-path [string] --auto-yes [boolean] --keep-N [integer]\n"
+ printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes [boolean] --keep-N [integer]\n"
  echo "exmaple:"
- printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --auto-yes true --keep-N 3\n"
+ printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes true --keep-N 3\n"
 
  exit 0
 fi 
@@ -49,6 +52,7 @@ fi
 [[ -z `echo "$KEEP_N" | grep -E ^\-?[0-9]+$` ]] && KEEP_N=3
 
 IS_VERBOSE=${IS_VERBOSE:-false}
+PATTERN=${PATTERN:-"([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz|([a-zA-Z0-9_]+)?.sql)"}
 
 if [ -z "$SOURCE_PATH" ]; then
  echo "source path is required."
@@ -64,11 +68,13 @@ echo "IS VERBOSE? $IS_VERBOSE"
 echo "AUTO YES? $AUTO_YES"
 echo "SOURCE PATH: $SOURCE_PATH"
 echo "DEST PATH: $DEST_PATH"
+echo "PATTERN: $PATTERN"
 echo "KEEP N: $KEEP_N"
 
 [[ "$IS_VERBOSE" = true ]] && echo "***************** start - "`date`" ****************"
 
-FILE_LIST=$(ls -lrth "$SOURCE_PATH" | awk {'print $9'} | grep -E -o "([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz|([a-zA-Z0-9_]+)?.sql)" | uniq | sort)
+FILE_LIST=$(ls -lrth "$SOURCE_PATH" | awk {'print $9'} | awk NF)
+FILE_LIST=$(echo "$FILE_LIST" | grep -E -o "$PATTERN" | uniq | sort)
 
 NUM_OF_FILES=$(echo "$FILE_LIST" | wc -l)
 
