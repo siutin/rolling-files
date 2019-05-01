@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# ./rolling-files --source-path a --dest-path b --auto-yes c --keep-N d --file-pattern e --dry-run d
-
 # ----- handle arguments ---- >
 
 while [ $# -ne 0 ]
@@ -40,12 +38,32 @@ done
 
 # ------ handle help ------------- <
 
-if [ "$IS_HELP" = true ]; then
- echo "usage:" 
- printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes --keep-N [integer] --dry-run \n"
- echo "example:"
- printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes --keep-N 3 --dry-run\n"
+__BASENAME=$(basename $0)
+__MANUAL="Usage: $__BASENAME [ARGUMENTS]
 
+Required Arguments:
+  --source-path <argument>       Specify the path to the source directory.
+  --dest-path <argument>         Specify the path to the destination directory.
+
+Optional Arguments:
+  --keep-N <argument>            Set number of files that need to be retained. Default 3.
+  --file-pattern <PATTERN>       Filter files by using grep extended regular expressions.
+  --auto-yes                     Automatic yes to prompts; assume \"yes\" as answer to all prompts and run non-interactively.
+  --dry-run                      Perform a trial run with no changes made.
+  --verbose                      Increase the verbosity.
+  --help or -h or -?             Display the manaual page for the command.
+
+Example:
+  $__BASENAME \\
+    --source-path /mnt/my-data/ \\
+    --dest-path ~/archives/ \\
+    --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" \\
+    --keep-N 3 \\
+    --auto-yes
+"
+
+if [ "$IS_HELP" = true ]; then
+ echo "$__MANUAL"
  exit 0
 fi 
 # ----------- main --------------- >
