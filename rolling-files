@@ -99,9 +99,17 @@ else
  if [ "$key" = 'Y' ] || [ "$key" = 'y' ] || [ "$AUTO_YES" = true ]; then
   echo "Y."
   # FILES_TO_MOVE MUST NOT BE EMPTY !!!!
-  [ -z "$FILES_TO_MOVE" ] && \ 
-    echo "ERROR: FILES_TO_MOVE is empty" || \
-    (ls -l "$SOURCE_PATH" | awk '{ print $9 }' | grep "$FILES_TO_MOVE" | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} "$DEST_PATH")
+  [ -z "$FILES_TO_MOVE" ] && echo "ERROR: FILES_TO_MOVE is empty" && exit 1
+
+  # build rsync arguments
+  RSYNC_ARGS=(-avh --progress --remove-source-files )
+
+  # build rsync source files, convert newline to space
+  FILES_TO_MOVE=$(ls -l "$SOURCE_PATH" | awk '{ print $9 }' | grep "$FILES_TO_MOVE" | xargs -n 1 -i echo "$SOURCE_PATH/{}")
+  RSYNC_MOVE_FILES=( $(echo "$FILES_TO_MOVE" | xargs -n 1 -i echo {}) )
+
+  # compose cmd
+  rsync ${RSYNC_ARGS[@]} ${RSYNC_MOVE_FILES[@]} "$DEST_PATH"
  else
   echo "Abort."
  fi
