@@ -94,7 +94,7 @@ else
   echo "Y."
   RAND_NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
   ls -l "$SOURCE_PATH" | awk '{ print $9 }' > "/tmp/source_files_$RAND_NAME"
-  echo "$FILES_TO_MOVE" | xargs -I {} grep -n {} "/tmp/source_files_$RAND_NAME" | sed 's/^\([0-9]\{1,\}\:\)//g' | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} "$DEST_PATH"
+  echo "$FILES_TO_MOVE" | xargs -i grep {} "/tmp/source_files_$RAND_NAME" | xargs -n 1 -i echo "$SOURCE_PATH/{}" | xargs -n 1 -i rsync -avh --progress --remove-source-files {} "$DEST_PATH"
  else
   echo "Abort."
  fi
