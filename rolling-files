@@ -21,10 +21,10 @@ do
             PATTERN="$2"
             ;;
         --auto-yes)
-            AUTO_YES=${2:-true}
+            AUTO_YES=true
             ;;
         --dry-run)
-            DRY_RUN=${2:-true}
+            DRY_RUN=true
             ;;
         --help|-h|\?)
             IS_HELP=true
@@ -42,19 +42,19 @@ done
 
 if [ "$IS_HELP" = true ]; then
  echo "usage:" 
- printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes [boolean] --keep-N [integer] --dry-run [boolean]\n"
+ printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes --keep-N [integer] --dry-run \n"
  echo "example:"
- printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes true --keep-N 3 --dry-run\n"
+ printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes --keep-N 3 --dry-run\n"
 
  exit 0
 fi 
 # ----------- main --------------- >
 
-! [[ "$AUTO_YES" = true ]] && ! [[ "$AUTO_YES" = false ]] && AUTO_YES=false
+AUTO_YES=${AUTO_YES:-false}
+DRY_RUN=${DRY_RUN:-false}
+IS_VERBOSE=${IS_VERBOSE:-false}
 
 [[ -z `echo "$KEEP_N" | grep -E ^\-?[0-9]+$` ]] && KEEP_N=3
-
-IS_VERBOSE=${IS_VERBOSE:-false}
 PATTERN=${PATTERN:-"([a-zA-Z0-9_]+)_[[:digit:]]{8}_[[:digit:]]{6}\.(bz2|tar\.gz|([a-zA-Z0-9_]+)?.sql)"}
 
 if [ -z "$SOURCE_PATH" ]; then
