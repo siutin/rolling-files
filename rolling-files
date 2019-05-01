@@ -46,7 +46,7 @@ Required Arguments:
   --dest-path <argument>         Specify the path to the destination directory.
 
 Optional Arguments:
-  --keep-N <argument>            Set number of files that need to be retained. Default 3.
+  --keep-N <argument>            Keep the N most recent files. Default 3.
   --file-pattern <PATTERN>       Filter files by using grep extended regular expressions.
   --auto-yes                     Automatic yes to prompts; assume \"yes\" as answer to all prompts and run non-interactively.
   --dry-run                      Perform a trial run with no changes made.
