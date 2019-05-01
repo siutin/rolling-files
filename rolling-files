@@ -43,7 +43,7 @@ done
 if [ "$IS_HELP" = true ]; then
  echo "usage:" 
  printf "\trolling-files --source-path [string] --dest-path [string] --file-pattern [string] --auto-yes [boolean] --keep-N [integer] --dry-run [boolean]\n"
- echo "exmaple:"
+ echo "example:"
  printf "\trolling-files --source-path ~/backup/ --dest-path /mnt/datacenter/backup/ --file-pattern \"foo_bar_[[:digit:]]{8}\.zip\" --auto-yes true --keep-N 3 --dry-run\n"
 
  exit 0
