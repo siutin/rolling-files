@@ -8,7 +8,7 @@ a bash script for file rotation
 > rolling-files \
    --source-path /mnt/my-data/ \
    --dest-path ~/archives/ \
-   --file-pattern "foo_bar_[[:digit:]]{8}\.zip" \
+   --file-pattern "backup_[[:digit:]]{8}\.zip" \
    --keep-N 2
 
 IS VERBOSE? false
